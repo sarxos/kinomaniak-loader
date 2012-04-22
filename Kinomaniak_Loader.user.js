@@ -3,7 +3,7 @@
 // @namespace      http://www.sarxos.pl/km-loader
 // @description    Load Movie from Kinomaniak
 // @include        http://www.kinomaniak.tv/*
-// @resource       script http://www.sarxos.pl/km-loader/
+// @resource       script https://raw.github.com/sarxos/kinomaniak-loader/master/script.js
 // ==/UserScript==
 
 ;(function() {

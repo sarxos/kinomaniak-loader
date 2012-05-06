@@ -37,7 +37,9 @@
 			$(container_id).css('font-size', '24pt');
 			$(container_id).html('<br><br>Loading Attempts: ' + KM.clicks);
 
-			$.ajax(url, {
+			$.ajax({
+				url : url,
+				type : 'GET',
 				accept : 'text/html',
 				timeout : KM.timeout,
 				error : function(xhr, status, error) {

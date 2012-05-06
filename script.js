@@ -1,43 +1,66 @@
-;(function(window) {
+;(function(global) {
 
-	window.KM = {
+	global.KM = {
 
+		/**
+		 * Timeout for movie loading.
+		 */
+		timeout : 5000,
+		
+		/**
+		 * Number of pseudo-clicks performed.
+		 */
+		clicks : 0,
+		
+		/**
+		 * Console-safe log.
+		 */
 		log : function(msg) {
 			if (typeof console != 'undefined') {
 				console.info(msg);
 			}
 		},
 		
+		/**
+		 * Load movie.
+		 */
 		load : function(cid, hash) {
 		
-			container_id = eval(cid);
-			url = eval(hash);
+			var container_id = eval(cid);
+			var url = eval(hash);
 
-			window.km_clicks++;
+			KM.clicks++;
 
 			$(container_id).css('background-color', 'black');
 			$(container_id).css('color', 'white');
 			$(container_id).css('text-align', 'center');
 			$(container_id).css('font-size', '24pt');
-			$(container_id).html('<br><br>Loading Attempts: ' + km_clicks);
+			$(container_id).html('<br><br>Loading Attempts: ' + KM.clicks);
 
-			$.get(url, function (data) {
-				if (data.indexOf('Aktualnie zbyt wielu') !== -1) {
-					KM.log('not loaded - too many users ' + km_clicks);
-					setTimeout(function() { load_player(cid, hash) }, km_timeout);
-				} else {
-					KM.log('succesfully loaded!');
-					$(container_id).html(data);
-				}
-			});		
+			$.ajax(url, {
+				accept : 'text/html',
+				timeout : KM.timeout,
+				error : function(xhr, status, error) {
+					KM.log('http error / timeout');
+					setTimeout(function() { load_player(cid, hash) }, KM.timeout);
+				},
+				success : function(data, status, xhr) {
+					if (data.indexOf('Aktualnie zbyt wielu') !== -1) {
+						KM.log('not loaded - too many users ' + KM.clicks);
+						setTimeout(function() { load_player(cid, hash) }, KM.timeout);
+					} else {
+						KM.log('succesfully loaded!');
+						$(container_id).html(data);
+					}
+				}			
+			});
 		}
 		
 	};
 
 })(this);
 
-window.km_timeout = 5000;
-window.km_clicks = 0;
-window.load_player = KM.load;
-
-$('#player_con_0_nl').html('Do diabla! Wczytaj i nie pytaj!');
+/**
+ * Replace original loading function.
+ */
+this.load_player = KM.load;

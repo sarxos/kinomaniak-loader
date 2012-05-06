@@ -41,7 +41,7 @@
 				url : url,
 				type : 'GET',
 				accept : 'text/html',
-				timeout : KM.timeout,
+				timeout : KM.timeout * 2,
 				error : function(xhr, status, error) {
 					KM.log('http error / timeout');
 					setTimeout(function() { load_player(cid, hash) }, KM.timeout);
